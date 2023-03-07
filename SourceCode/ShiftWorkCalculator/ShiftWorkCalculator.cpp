@@ -51,52 +51,119 @@ std::string ShiftCalculation(int dayShiftDays, int nightShiftDays, double dayShi
 
 }
 
+//Checks if number is an integer and corrects user.
+bool has_only_int(std::string &answer) {
+    bool aux = false;
+    do {
+        if (answer.find_first_not_of("0123456789") == std::string::npos)
+        {
+            aux = true;
+            return answer.find_first_not_of("0123456789") == std::string::npos;
+        }
+        else
+        {
+            std::cout << "Invalid Number.  Please enter valid number." << std::endl;
+            std::cin >> answer;
+        }
+    } while (aux == false);
+}
+
+//Checks if number is an double and corrects user.
+bool has_only_double(std::string &answer) {
+    bool aux = false;
+    do {
+        if (answer.find_first_not_of("0123456789.") == std::string::npos)
+        {
+            if ((std::count(answer.begin(), answer.end(), '.') <= 1 ))
+            {
+                aux = true;
+                return answer.find_first_not_of("0123456789.") == std::string::npos;
+            }
+            std::cout << "Invalid Number.  Please enter valid decimal number." << std::endl;
+            std::cin >> answer;
+        }
+        else
+        {
+            std::cout << "Invalid Number.  Please enter valid decimal number." << std::endl;
+            std::cin >> answer;
+        }
+    } while (aux == false);
+}
+
+//Checks if number is an double and corrects user.
+bool has_only_bool(std::string &answer) {
+    bool aux = false;
+    do {
+        if (answer.find_first_not_of("01") == std::string::npos)
+        {
+            aux = true;
+            return answer.find_first_not_of("01") == std::string::npos;
+        }
+        else
+        {
+            std::cout << "Invalid Number.  Please enter valid  1 or 0 number." << std::endl;
+            std::cin >> answer;
+
+        }
+    } while (aux == false);
+}
+
 int main()
 {
     //Note: Default hours per day set to 11.5
     //      Default wages set to 19.00 for day and 20.00 for nights 
     
-    /* Didn't work anyway
-    std::cout.setf(std::ios::fixed);
-    std::cout.setf(std::ios::showpoint);
-    std::cout << std::setprecision(2) << std::fixed;
-    */
-    
     //Initialize values
     int dayShiftDays = 0;
     int nightShiftDays = 0;
-    double hoursPerDay = 11.5;
+    double hoursPerDay = 11.5; //Add a function value to change if needed within the script.
     double dayShiftWage = 0.00;
     double nightShiftWage = 0.00;
     bool wageHoursBool = 0;
+    bool aux = false;
+    std::string answer;
+    
+
 
     //Start program
     bool sentinal = 1;
     while (sentinal == 1)
     {
 
-        //exceptions not needed if people use proper numbers....
 
         std::cout << "Do you want to enter wages?  (0 for default hours, 1 for yes)";
-        std::cin >> wageHoursBool;
+        std::cin >> answer;
+        has_only_bool(answer);
+        wageHoursBool = (answer == "1");
 
         if (wageHoursBool == 1)
         {
             std::cout << "Enter total amount of Wage for day shift: ";
-            std::cin >> dayShiftWage;
+            std::cin >> answer;
+            has_only_double(answer);
+            dayShiftWage = stoi(answer);
 
             //Enter night shift hours
             std::cout << "Enter total amount of Wage for night shift: ";
-            std::cin >> nightShiftWage;
+            std::cin >> answer;
+            has_only_double(answer);
+            nightShiftWage = stoi(answer);
         }
 
+
         //Enter day shift hours
-        std::cout << "Enter total amount of hours for day shift: ";
-        std::cin >> dayShiftDays;
+        std::cout << "Enter total amount of days for day shift: ";
+        std::cin >> answer;
+        has_only_int(answer);
+        dayShiftDays = stoi(answer);
+
 
         //Enter night shift hours
-        std::cout << "Enter total amount of hours for night shift: ";
-        std::cin >> nightShiftDays;
+        std::cout << "Enter total amount of days for night shift: ";
+        std::cin >> answer;
+        has_only_int(answer);
+        nightShiftDays = stoi(answer);
+
 
         //total calculation
         std::cout << "Monthly Total = $" + ShiftCalculation(dayShiftDays, nightShiftDays, dayShiftWage, nightShiftWage, hoursPerDay);
@@ -106,7 +173,7 @@ int main()
         std::cout << "Do you wish to continue?  0 for no and 1 for yes: ";
         std::cin >> answer;
 
-        //handles most wrong values in all the of above code
+        //Asks user if you want to do this operation over again.
         if (answer == "0" || answer == "1")
         {
             if (answer == "0")
@@ -120,8 +187,9 @@ int main()
         }
         else 
         {
-            std::cout << "Error occured." << std::endl;
+            std::cout << "Wrong answer entered.  Exiting program." << std::endl;
             break;
         }
+        //End sentinal while loop.
     }
 }
